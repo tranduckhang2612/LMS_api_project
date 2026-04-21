@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | EduManager</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-box">
+            <div class="login-header">
+                <span class="material-symbols-outlined" style="font-size: 3rem; color: var(--primary);">school</span>
+                <h1>EduManager</h1>
+                <p class="text-muted">Sign in to your account</p>
+            </div>
+            
+            <div id="login-error"></div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="e.g. sinhvien01" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    Sign In
+                    <span class="material-symbols-outlined">login</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="assets/js/views/login.js"></script>
+</body>
+</html>

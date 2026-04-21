@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Assignments | EduManager</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <main class="container">
+        <a href="javascript:history.back()" class="nav-link mb-4" style="display:inline-block;">&larr; Back to Sessions</a>
+        
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 id="session-title">Loading Session...</h1>
+            </div>
+            <!-- Instructor Only Action -->
+            <button id="btn-create-assignment" class="btn btn-primary hidden">
+                <span class="material-symbols-outlined">assignment_add</span> New Assignment
+            </button>
+        </div>
+
+        <div id="error-container"></div>
+
+        <!-- Create Assignment Form (Hidden by default) -->
+        <div id="create-assignment-form" class="card mb-4 hidden">
+            <h3>Create New Assignment</h3>
+            <form id="assignment-form" class="mt-4">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" id="assignment-title" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="assignment-desc" class="form-input" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Due Date</label>
+                    <input type="datetime-local" id="assignment-due" class="form-input" required>
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save Assignment</button>
+                    <button type="button" id="btn-cancel-assignment" class="btn btn-outline">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="assignments-list" class="grid grid-cols-1">
+            <p>Loading assignments...</p>
+        </div>
+    </main>
+
+    <script type="module" src="assets/js/views/session.js"></script>
+</body>
+</html>

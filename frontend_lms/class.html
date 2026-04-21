@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Sessions | EduManager</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <main class="container">
+        <a href="javascript:history.back()" class="nav-link mb-4" style="display:inline-block;">&larr; Back</a>
+        
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 id="class-title">Loading Class...</h1>
+            </div>
+            <!-- Instructor Only Action -->
+            <button id="btn-create-session" class="btn btn-primary hidden">
+                <span class="material-symbols-outlined">add</span> New Session
+            </button>
+        </div>
+
+        <div id="error-container"></div>
+
+        <!-- Create Session Form (Hidden by default) -->
+        <div id="create-session-form" class="card mb-4 hidden">
+            <h3>Create New Session</h3>
+            <form id="session-form" class="mt-4">
+                <div class="form-group">
+                    <label class="form-label">Session Number</label>
+                    <input type="number" id="session-no" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Topic</label>
+                    <input type="text" id="session-topic" class="form-input" required>
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" class="btn btn-primary">Save Session</button>
+                    <button type="button" id="btn-cancel-session" class="btn btn-outline">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="sessions-list" class="grid grid-cols-1">
+            <p>Loading sessions...</p>
+        </div>
+    </main>
+
+    <script type="module" src="assets/js/views/class.js"></script>
+</body>
+</html>

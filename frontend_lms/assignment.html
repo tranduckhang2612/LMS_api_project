@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Details | EduManager</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .submission-card { background: #fdfdfd; border-left: 4px solid var(--primary); }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <a href="javascript:history.back()" class="nav-link mb-4" style="display:inline-block;">&larr; Back</a>
+        
+        <div id="assignment-details" class="card mb-6">
+            <h1>Loading...</h1>
+        </div>
+
+        <div id="error-container"></div>
+
+        <!-- Student Submission Section -->
+        <div id="student-section" class="card mb-4 hidden">
+            <h3>Submit Your Work</h3>
+            <form id="submission-form" class="mt-4">
+                <div class="form-group">
+                    <label class="form-label">Submission Content / URL / Text</label>
+                    <textarea id="submission-content" class="form-input" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Homework</button>
+            </form>
+        </div>
+
+        <!-- Instructor Grading Section -->
+        <div id="instructor-section" class="hidden">
+            <h2 class="mb-4">Student Submissions</h2>
+            <div id="submissions-list" class="grid grid-cols-1">
+                <p>Loading submissions...</p>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="assets/js/views/assignment.js"></script>
+</body>
+</html>
