@@ -17,11 +17,12 @@ class CourseSerializer(serializers.ModelSerializer):
 
 class ClassSerializer(serializers.ModelSerializer):
     instructor_name = serializers.SerializerMethodField()
+    course_title = serializers.CharField(source='course.course_title', read_only=True)
 
     class Meta:
         model = Class
         # Trả về các trường cần thiết theo thiết kế API
-        fields = ['class_id', 'course', 'instructor', 'instructor_name', 'semester', 'year', 'start_time', 'end_time']
+        fields = ['class_id', 'course', 'course_title', 'instructor', 'instructor_name', 'semester', 'year', 'start_time', 'end_time']
 
     # Custom field để lấy tên Giảng viên thay vì chỉ lấy mã ID
     def get_instructor_name(self, obj):
@@ -49,8 +50,8 @@ class AssignmentSerializer(serializers.ModelSerializer):
 class StudentAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Assignment
-        # Chỉ định đúng 3 trường sinh viên được thấy
-        fields = ['assignment_title', 'assignment_url', 'deadline']
+        # Chỉ định đúng các trường sinh viên được thấy
+        fields = ['assignment_id', 'assignment_title', 'description', 'assignment_url', 'deadline']
 
     def to_representation(self, instance):
         res = super().to_representation(instance)
@@ -59,20 +60,28 @@ class StudentAssignmentSerializer(serializers.ModelSerializer):
             res['assignment_url'] = instance.assignment_url.url
         return res
 
+class StudentSessionSerializer(serializers.ModelSerializer):
+    assignments = StudentAssignmentSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Session
+        fields = ['session_id', 'session_title', 'sn_content', 'created_at', 'assignments']
+
 class SubmissionSerializer(serializers.ModelSerializer):
     overdue_status = serializers.SerializerMethodField()
+    submission_url_full = serializers.SerializerMethodField()
 
     class Meta:
         model = Submission
         fields = [
             'submission_id', 'assignment_ref', 'student_ref', 
-            'submission_url', 'submitted_at', 'score', 
+            'submission_url', 'submission_url_full', 'file_name', 'submitted_at', 'score', 
             'is_submitted', 'is_late', 'overdue_status'
         ]
         # Sinh viên CHỈ được gửi mỗi file lên, tất cả các trường còn lại Backend tự lo
         read_only_fields = [
             'submission_id', 'assignment_ref', 'student_ref', 
-            'submitted_at', 'score', 'is_late', 'is_submitted'
+            'submission_url_full', 'file_name', 'submitted_at', 'score', 'is_late', 'is_submitted'
         ]
 
     def get_overdue_status(self, obj):
@@ -84,14 +93,22 @@ class SubmissionSerializer(serializers.ModelSerializer):
         hours, remainder = divmod(delta.seconds, 3600)
         minutes, _ = divmod(remainder, 60)
         return f"Nộp muộn {days} ngày, {hours} giờ, {minutes} phút"
+
+    def get_submission_url_full(self, obj):
+        if obj.submission_url:
+            return obj.submission_url.url
+        return None
     
 class StudentSubmissionSerializer(serializers.ModelSerializer):
     overdue_status = serializers.SerializerMethodField()
+    submission_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Submission
-        # Chỉ định chính xác 5 trường mà bạn muốn cho Sinh viên xem
+        # Chỉ định chính xác các trường mà bạn muốn cho Sinh viên xem
         fields = [
             'submission_url', 
+            'file_name',
             'submitted_at', 
             'score', 
             'is_submitted', 
@@ -107,5 +124,10 @@ class StudentSubmissionSerializer(serializers.ModelSerializer):
         hours, remainder = divmod(delta.seconds, 3600)
         minutes, _ = divmod(remainder, 60)
         return f"Nộp muộn {days} ngày, {hours} giờ, {minutes} phút"
+
+    def get_submission_url(self, obj):
+        if obj.submission_url:
+            return obj.submission_url.url
+        return None
     
     

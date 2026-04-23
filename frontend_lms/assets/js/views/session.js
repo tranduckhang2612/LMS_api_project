@@ -8,19 +8,18 @@ if (!sessionId) window.location.href = 'dashboard.html';
 
 document.getElementById('session-title').textContent = `Session Tasks`;
 
-const storedToken = localStorage.getItem('access_token');
-if (storedToken) {
-    try {
-        const payload = JSON.parse(atob(storedToken.split('.')[1]));
-        if (payload.user_id) { 
-            document.getElementById('btn-create-assignment').classList.remove('hidden');
-        }
-    } catch(e) {}
-}
+// Remove old token check logic since we check by API now
 
 async function loadAssignments() {
     try {
-        const assignments = await api.getSessionAssignments(sessionId);
+        let assignments;
+        try {
+            assignments = await api.getInstructorSessionAssignments(sessionId);
+            document.getElementById('btn-create-assignment').classList.remove('hidden');
+        } catch (err) {
+            assignments = await api.getStudentSessionAssignments(sessionId);
+        }
+        
         const list = document.getElementById('assignments-list');
         list.innerHTML = '';
         
@@ -30,13 +29,17 @@ async function loadAssignments() {
         }
 
         assignments.forEach(assignment => {
+            const title = assignment.assignment_title || assignment.title || 'Untitled';
+            const due = assignment.deadline || assignment.due_date;
+            const desc = assignment.description || '';
+            
             list.innerHTML += `
                 <div class="card">
                     <div class="flex justify-between items-start mb-2">
-                        <h3>${assignment.title}</h3>
-                        <span class="badge badge-blue">Due: ${new Date(assignment.due_date).toLocaleString()}</span>
+                        <h3>${title}</h3>
+                        <span class="badge badge-blue">Due: ${due ? new Date(due).toLocaleString() : 'No deadline'}</span>
                     </div>
-                    <p class="text-muted mb-4">${assignment.description}</p>
+                    ${desc ? `<p class="text-muted mb-4">${desc}</p>` : ''}
                     <a href="assignment.html?id=${assignment.assignment_id}" class="btn btn-primary">View & Submit</a>
                 </div>
             `;
@@ -57,9 +60,9 @@ document.getElementById('assignment-form').addEventListener('submit', async (e) 
     e.preventDefault();
     try {
         await api.createAssignment(sessionId, {
-            title: document.getElementById('assignment-title').value,
+            assignment_title: document.getElementById('assignment-title').value,
             description: document.getElementById('assignment-desc').value,
-            due_date: document.getElementById('assignment-due').value
+            deadline: document.getElementById('assignment-due').value
         });
         formDiv.classList.add('hidden');
         e.target.reset();

@@ -24,9 +24,10 @@
             <h3>Submit Your Work</h3>
             <form id="submission-form" class="mt-4">
                 <div class="form-group">
-                    <label class="form-label">Submission Content / URL / Text</label>
-                    <textarea id="submission-content" class="form-input" rows="4" required></textarea>
+                    <label class="form-label">Upload File (PDF, DOCX, ZIP, etc.)</label>
+                    <input type="file" id="submission-file" class="form-input" accept=".pdf,.doc,.docx,.zip,.rar,image/*" required>
                 </div>
+                <div id="current-submission-info" class="mb-4"></div>
                 <button type="submit" class="btn btn-primary">Submit Homework</button>
             </form>
         </div>

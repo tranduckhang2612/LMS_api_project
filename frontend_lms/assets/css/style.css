@@ -262,3 +262,102 @@ h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.25rem; }
     text-align: center;
     margin-bottom: 2rem;
 }
+
+/* Sidebar Layout for SPA */
+.layout-container {
+    display: flex;
+    gap: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: calc(100vh - 70px);
+}
+
+.sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    background-color: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    padding: 1rem 0;
+    height: fit-content;
+    position: sticky;
+    top: 90px;
+}
+
+.sidebar-header {
+    padding: 0 1.5rem 1rem 1.5rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.5rem;
+}
+
+.sidebar-menu {
+    list-style: none;
+}
+
+.sidebar-menu-item {
+    display: block;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-main);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-menu-item:hover {
+    background-color: var(--primary-light);
+}
+
+.sidebar-menu-item.active {
+    background-color: var(--primary-light);
+    border-left-color: var(--primary);
+    color: var(--primary);
+}
+
+.sidebar-submenu {
+    list-style: none;
+    padding-left: 0;
+    margin: 0.25rem 0;
+}
+
+.sidebar-submenu-item {
+    display: block;
+    padding: 0.5rem 1.5rem 0.5rem 2.5rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-submenu-item:hover {
+    color: var(--primary);
+    background-color: var(--primary-light);
+}
+
+.sidebar-submenu-item.active {
+    color: var(--primary);
+    font-weight: 600;
+    background-color: var(--primary-light);
+    border-left-color: var(--primary);
+}
+
+.main-content {
+    flex-grow: 1;
+    background-color: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    min-height: 500px;
+}
+
+.content-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+}

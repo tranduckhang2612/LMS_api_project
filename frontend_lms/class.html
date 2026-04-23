@@ -7,43 +7,43 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <main class="container">
-        <a href="javascript:history.back()" class="nav-link mb-4" style="display:inline-block;">&larr; Back</a>
-        
-        <div class="flex justify-between items-center mb-4">
-            <div>
+    <main class="layout-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header" id="sidebar-class-name">Loading...</div>
+            <ul class="sidebar-menu" id="sidebar-menu">
+                <li class="p-4 text-muted">Loading content...</li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <section class="main-content">
+            <a href="dashboard.html" class="nav-link mb-4" style="display:inline-block;">&larr; Back to Dashboard</a>
+            
+            <div class="content-header flex justify-between items-center">
                 <h1 id="class-title">Loading Class...</h1>
-            </div>
-            <!-- Instructor Only Action -->
-            <button id="btn-create-session" class="btn btn-primary hidden">
-                <span class="material-symbols-outlined">add</span> New Session
-            </button>
-        </div>
-
-        <div id="error-container"></div>
-
-        <!-- Create Session Form (Hidden by default) -->
-        <div id="create-session-form" class="card mb-4 hidden">
-            <h3>Create New Session</h3>
-            <form id="session-form" class="mt-4">
-                <div class="form-group">
-                    <label class="form-label">Session Number</label>
-                    <input type="number" id="session-no" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Topic</label>
-                    <input type="text" id="session-topic" class="form-input" required>
-                </div>
+                <!-- Instructor Only Action -->
                 <div class="flex gap-2">
-                    <button type="submit" class="btn btn-primary">Save Session</button>
-                    <button type="button" id="btn-cancel-session" class="btn btn-outline">Cancel</button>
+                    <button id="btn-create-session" class="btn btn-primary hidden">
+                        <span class="material-symbols-outlined">add</span> New Session
+                    </button>
+                    <button id="btn-create-assignment" class="btn btn-outline hidden">
+                        <span class="material-symbols-outlined">add_task</span> New Assignment
+                    </button>
                 </div>
-            </form>
-        </div>
+            </div>
 
-        <div id="sessions-list" class="grid grid-cols-1">
-            <p>Loading sessions...</p>
-        </div>
+            <div id="error-container"></div>
+
+            <!-- Dynamic Content Area -->
+            <div id="dynamic-content">
+                <div class="text-center text-muted mt-8">
+                    <span class="material-symbols-outlined" style="font-size: 48px; margin-bottom: 1rem;">menu_book</span>
+                    <p>Select a topic from the sidebar to view content.</p>
+                </div>
+            </div>
+
+        </section>
     </main>
 
     <script type="module" src="assets/js/views/class.js"></script>

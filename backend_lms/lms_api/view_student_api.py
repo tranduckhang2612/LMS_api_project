@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils import timezone
 from .models import Assignment, Submission, Class, Session, Student
 from .permissions import IsStudent, CheckClassAccess
-from .serializers import ClassSerializer, SessionSerializer, StudentAssignmentSerializer, SubmissionSerializer, StudentSubmissionSerializer
+from .serializers import ClassSerializer, SessionSerializer, StudentAssignmentSerializer, SubmissionSerializer, StudentSubmissionSerializer, StudentSessionSerializer
 import cloudinary.uploader
 
 class StudentClassListAPIView(ListAPIView):
@@ -20,7 +20,7 @@ class StudentClassListAPIView(ListAPIView):
         return Class.objects.filter(enrolled_students__student__user=user)
 
 class StudentSessionListAPIView(ListAPIView):
-    serializer_class = SessionSerializer
+    serializer_class = StudentSessionSerializer
     permission_classes = [IsAuthenticated, CheckClassAccess] 
 
     def get_queryset(self):
@@ -78,12 +78,16 @@ class StudentSubmissionAPIView(APIView):
             status_code = status.HTTP_201_CREATED
 
         if serializer.is_valid():
+            uploaded_file = request.data.get('submission_url')
+            file_name = uploaded_file.name if uploaded_file else None
+            
             serializer.save(
                 assignment_ref=assignment,
                 student_ref=student,
                 is_late=is_late,
                 submitted_at=now,
-                is_submitted=True
+                is_submitted=True,
+                file_name=file_name
             )
             return Response(serializer.data, status=status_code)
             

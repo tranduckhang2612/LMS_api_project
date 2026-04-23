@@ -10,16 +10,24 @@ function getAuthHeaders() {
 async function handleResponse(response) {
     if (!response.ok) {
         if (response.status === 401) {
-            // Token expired or invalid, force logout
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
             window.location.href = 'index.html';
             throw new Error('Session expired. Please login again.');
         }
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || errorData.error || 'API Request Failed');
+        
+        // Handle DRF serializer validation errors (object with field keys)
+        let errMsg = errorData.detail || errorData.error;
+        if (!errMsg && Object.keys(errorData).length > 0) {
+            // Extract the first validation error message
+            const firstKey = Object.keys(errorData)[0];
+            const firstErr = errorData[firstKey];
+            errMsg = `${firstKey}: ${Array.isArray(firstErr) ? firstErr[0] : firstErr}`;
+        }
+        
+        throw new Error(errMsg || 'API Request Failed');
     }
-    // Return empty object for 204 No Content
     if (response.status === 204) return {};
     return response.json();
 }
@@ -39,38 +47,48 @@ const api = {
         return data;
     },
 
-    // Courses
+    // Courses (Instructor)
     async getCourses() {
-        const response = await fetch(`${BASE_URL}/courses`, {
+        const response = await fetch(`${BASE_URL}/instructor/courses`, {
             headers: getAuthHeaders()
         });
         return handleResponse(response);
     },
 
     async getCourseDetails(courseId) {
-        const response = await fetch(`${BASE_URL}/courses/${courseId}`, {
-            headers: getAuthHeaders()
-        });
-        return handleResponse(response);
+        const courses = await this.getCourses();
+        const course = courses.find(c => c.course_id === courseId);
+        if (!course) throw new Error('Course not found');
+        return course;
     },
 
     async getCourseClasses(courseId) {
-        const response = await fetch(`${BASE_URL}/courses/${courseId}/classes`, {
+        const response = await fetch(`${BASE_URL}/instructor/courses/${courseId}/classes`, {
             headers: getAuthHeaders()
         });
         return handleResponse(response);
     },
 
-    // Sessions
-    async getClassSessions(classId) {
-        const response = await fetch(`${BASE_URL}/classes/${classId}/sessions`, {
+    // Classes (Student)
+    async getStudentClasses() {
+        const response = await fetch(`${BASE_URL}/student/classes`, {
             headers: getAuthHeaders()
         });
+        return handleResponse(response);
+    },
+
+    // Sessions (Both)
+    async getInstructorClassSessions(classId) {
+        const response = await fetch(`${BASE_URL}/instructor/classes/${classId}/sessions`, { headers: getAuthHeaders() });
+        return handleResponse(response);
+    },
+    async getStudentClassSessions(classId) {
+        const response = await fetch(`${BASE_URL}/student/classes/${classId}/sessions`, { headers: getAuthHeaders() });
         return handleResponse(response);
     },
 
     async createSession(classId, sessionData) {
-        const response = await fetch(`${BASE_URL}/classes/${classId}/sessions`, {
+        const response = await fetch(`${BASE_URL}/instructor/classes/${classId}/sessions`, {
             method: 'POST',
             headers: { 
                 ...getAuthHeaders(),
@@ -81,16 +99,18 @@ const api = {
         return handleResponse(response);
     },
 
-    // Assignments
-    async getSessionAssignments(sessionId) {
-        const response = await fetch(`${BASE_URL}/sessions/${sessionId}/assignments`, {
-            headers: getAuthHeaders()
-        });
+    // Assignments (Both)
+    async getInstructorSessionAssignments(sessionId) {
+        const response = await fetch(`${BASE_URL}/instructor/sessions/${sessionId}/assignments`, { headers: getAuthHeaders() });
+        return handleResponse(response);
+    },
+    async getStudentSessionAssignments(sessionId) {
+        const response = await fetch(`${BASE_URL}/student/sessions/${sessionId}/assignments`, { headers: getAuthHeaders() });
         return handleResponse(response);
     },
 
     async createAssignment(sessionId, assignmentData) {
-        const response = await fetch(`${BASE_URL}/sessions/${sessionId}/assignments`, {
+        const response = await fetch(`${BASE_URL}/instructor/sessions/${sessionId}/assignments`, {
             method: 'POST',
             headers: { 
                 ...getAuthHeaders(),
@@ -101,23 +121,48 @@ const api = {
         return handleResponse(response);
     },
 
-    async getAssignmentDetails(assignmentId) {
-        const response = await fetch(`${BASE_URL}/assignments/${assignmentId}`, {
-            headers: getAuthHeaders()
-        });
+    async getInstructorAssignmentDetails(assignmentId) {
+        const response = await fetch(`${BASE_URL}/instructor/assignments/${assignmentId}`, { headers: getAuthHeaders() });
+        return handleResponse(response);
+    },
+    async getStudentAssignmentDetails(assignmentId) {
+        const response = await fetch(`${BASE_URL}/student/assignments/${assignmentId}`, { headers: getAuthHeaders() });
         return handleResponse(response);
     },
 
     // Submissions
-    async getSubmissions(assignmentId) {
-        const response = await fetch(`${BASE_URL}/assignments/${assignmentId}/submissions/`, {
+    async getSubmissions(assignmentId) { // Instructor
+        const response = await fetch(`${BASE_URL}/instructor/assignments/${assignmentId}/submissions`, {
             headers: getAuthHeaders()
         });
         return handleResponse(response);
     },
+    
+    async getStudentSubmissions(assignmentId) { // Student
+        const response = await fetch(`${BASE_URL}/student/assignments/${assignmentId}/submissions`, {
+            headers: getAuthHeaders()
+        });
+        return handleResponse(response);
+    },
+    
+    async submitAssignment(assignmentId, payload) { // Student
+        const headers = getAuthHeaders();
+        const isFormData = payload instanceof FormData;
+        
+        if (!isFormData) {
+            headers['Content-Type'] = 'application/json';
+        }
+        
+        const response = await fetch(`${BASE_URL}/student/assignments/${assignmentId}/submissions`, {
+            method: 'POST',
+            headers: headers,
+            body: isFormData ? payload : JSON.stringify(payload)
+        });
+        return handleResponse(response);
+    },
 
-    async gradeSubmission(submissionId, score) {
-        const response = await fetch(`${BASE_URL}/submissions/${submissionId}/grade`, {
+    async gradeSubmission(submissionId, score) { // Instructor
+        const response = await fetch(`${BASE_URL}/instructor/submissions/${submissionId}/grade`, {
             method: 'PATCH',
             headers: { 
                 ...getAuthHeaders(),
@@ -130,3 +175,4 @@ const api = {
 };
 
 export default api;
+

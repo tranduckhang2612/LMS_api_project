@@ -87,6 +87,7 @@ class Submission(models.Model):
     assignment_ref = models.ForeignKey(Assignment, on_delete=models.CASCADE, related_name='submissions')
     student_ref = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='submissions')
     submission_url = CloudinaryField('raw', resource_type= 'raw', folder='lms_submissions/') 
+    file_name = models.CharField(max_length=255, null=True, blank=True)
     submitted_at = models.DateTimeField(default=timezone.now)
     score = models.FloatField(null=True, blank=True)
     is_submitted = models.BooleanField(default=True)
