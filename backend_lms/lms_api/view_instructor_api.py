@@ -42,7 +42,7 @@ class InstructorSessionListCreateAPIView(ListCreateAPIView):
 
     def get_queryset(self):
         class_id = self.kwargs['class_id']
-        return Session.objects.filter(class_ref__class_id=class_id)
+        return Session.objects.filter(class_ref__class_id=class_id, is_deleted=False)
 
     def perform_create(self, serializer):
         class_id = self.kwargs['class_id']
@@ -68,7 +68,7 @@ class InstructorAssignmentListCreateAPIView(ListCreateAPIView):
 
     def get_queryset(self):
         session_id = self.kwargs.get('session_id')
-        return Assignment.objects.filter(session_ref_id=session_id)
+        return Assignment.objects.filter(session_ref_id=session_id, is_deleted=False)
 
     def perform_create(self, serializer):
         sid = self.kwargs.get('session_id')
@@ -93,7 +93,7 @@ class InstructorSubmissionListAPIView(ListAPIView):
 
     def get_queryset(self):
         assignment_id = self.kwargs['assignment_id']
-        return Submission.objects.filter(assignment_ref_id=assignment_id)
+        return Submission.objects.filter(assignment_ref_id=assignment_id, is_deleted=False)
 
 class InstructorSubmissionDeleteAPIView(DestroyAPIView):
     queryset = Submission.objects.filter(is_deleted=False)

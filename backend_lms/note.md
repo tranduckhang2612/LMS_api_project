@@ -1,7 +1,7 @@
 # 1. Tạo User cho Instructor 1: 
 inst_user = User.objects.create_user(
     username='giangvien01',
-    password='!s43B_8v6uQTmf-', 
+    password='password123', 
     role='instructor',
     first_name='Nguyen Van',
     last_name='A',

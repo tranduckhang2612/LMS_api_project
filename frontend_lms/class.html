@@ -35,6 +35,94 @@
 
             <div id="error-container"></div>
 
+            <div id="forms-container" class="mb-4">
+                <form id="form-create-session" class="card p-4 hidden" style="border-left: 4px solid var(--primary);">
+                    <h3 class="mb-4">New Session</h3>
+                    <div class="form-group">
+                        <label class="form-label">Session Title</label>
+                        <input type="text" id="input-session-title" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Content</label>
+                        <textarea id="input-session-content" class="form-input" rows="3"></textarea>
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Create Session</button>
+                        <button type="button" class="btn btn-outline" id="btn-cancel-session">Cancel</button>
+                    </div>
+                </form>
+
+                <form id="form-create-assignment" class="card p-4 hidden" style="border-left: 4px solid var(--secondary);">
+                    <h3 class="mb-4">New Assignment</h3>
+                    <div class="form-group">
+                        <label class="form-label">Select Session</label>
+                        <select id="input-assignment-session" class="form-input" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Assignment Title</label>
+                        <input type="text" id="input-assignment-title" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea id="input-assignment-desc" class="form-input" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deadline</label>
+                        <input type="datetime-local" id="input-assignment-deadline" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Attached File (Optional)</label>
+                        <input type="file" id="input-assignment-url" class="form-input" accept=".pdf,.doc,.docx,.zip,.rar,image/*">
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Create Assignment</button>
+                        <button type="button" class="btn btn-outline" id="btn-cancel-assignment">Cancel</button>
+                    </div>
+                </form>
+
+                <form id="form-update-session" class="card p-4 hidden" style="border-left: 4px solid var(--primary);">
+                    <h3 class="mb-4">Update Session</h3>
+                    <input type="hidden" id="update-session-id">
+                    <div class="form-group">
+                        <label class="form-label">Session Title</label>
+                        <input type="text" id="update-session-title" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Content</label>
+                        <textarea id="update-session-content" class="form-input" rows="3"></textarea>
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Update Session</button>
+                        <button type="button" class="btn btn-outline" id="btn-cancel-update-session">Cancel</button>
+                    </div>
+                </form>
+
+                <form id="form-update-assignment" class="card p-4 hidden" style="border-left: 4px solid var(--primary);">
+                    <h3 class="mb-4">Update Assignment</h3>
+                    <input type="hidden" id="update-assignment-id">
+                    <div class="form-group">
+                        <label class="form-label">Assignment Title</label>
+                        <input type="text" id="update-assignment-title" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea id="update-assignment-desc" class="form-input" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Deadline</label>
+                        <input type="datetime-local" id="update-assignment-deadline" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Replace Attached File (Optional)</label>
+                        <input type="file" id="update-assignment-url" class="form-input" accept=".pdf,.doc,.docx,.zip,.rar,image/*">
+                    </div>
+                    <div class="flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Update Assignment</button>
+                        <button type="button" class="btn btn-outline" id="btn-cancel-update-assignment">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
             <!-- Dynamic Content Area -->
             <div id="dynamic-content">
                 <div class="text-center text-muted mt-8">

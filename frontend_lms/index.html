@@ -12,11 +12,13 @@
             <div class="login-header">
                 <span class="material-symbols-outlined" style="font-size: 3rem; color: var(--primary);">school</span>
                 <h1>EduManager</h1>
-                <p class="text-muted">Sign in to your account</p>
+                <p class="text-muted" id="login-subtitle">Sign in to your account</p>
             </div>
             
             <div id="login-error"></div>
+            <div id="reset-success" class="alert alert-success hidden"></div>
 
+            <!-- Login Form -->
             <form id="login-form">
                 <div class="form-group">
                     <label class="form-label">Username</label>
@@ -30,6 +32,36 @@
                     Sign In
                     <span class="material-symbols-outlined">login</span>
                 </button>
+                <p style="text-align: center; margin-top: 1rem;">
+                    <a href="#" id="link-forgot-password" style="font-size: 0.9rem;">Forgot password?</a>
+                </p>
+            </form>
+
+            <!-- Forgot Password Form -->
+            <form id="forgot-password-form" class="hidden">
+                <div class="form-group">
+                    <label class="form-label">Student/Instructor ID</label>
+                    <input type="text" id="reset-id" class="form-input" placeholder="e.g. SV001 or GV001" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Registered Email</label>
+                    <input type="email" id="reset-email" class="form-input" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" id="reset-new-password" class="form-input" placeholder="••••••••" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" id="reset-confirm-password" class="form-input" placeholder="••••••••" required minlength="6">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="btn-reset">
+                    Reset Password
+                    <span class="material-symbols-outlined">lock_reset</span>
+                </button>
+                <p style="text-align: center; margin-top: 1rem;">
+                    <a href="#" id="link-back-login" style="font-size: 0.9rem;">&larr; Back to Sign In</a>
+                </p>
             </form>
         </div>
     </div>

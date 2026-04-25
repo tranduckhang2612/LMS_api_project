@@ -218,12 +218,17 @@ h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.25rem; }
 
 /* Badges */
 .badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 0.25rem 0.75rem;
     border-radius: 999px;
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
+    line-height: 1.2;
+    white-space: nowrap;
+    height: fit-content;
 }
 .badge-blue { background-color: var(--primary-light); color: var(--primary); }
 .badge-green { background-color: #e6f4ea; color: var(--success); }

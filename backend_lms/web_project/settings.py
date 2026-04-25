@@ -150,9 +150,9 @@ SIMPLE_JWT = {
 }
 
 cloudinary.config(
-    cloud_name = "xxxxxxx",
-    api_key = "xxxxxxxxx",
-    api_secret = "xxxxxxxx", 
+    cloud_name = "xxxxxxxxx",
+    api_key = "xxxxxxxxxxxxx",
+    api_secret = "xxxxxxxxx", 
     secure = True
 )
 

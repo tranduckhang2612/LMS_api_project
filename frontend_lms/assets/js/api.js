@@ -99,6 +99,26 @@ const api = {
         return handleResponse(response);
     },
 
+    async updateSession(sessionId, sessionData) {
+        const response = await fetch(`${BASE_URL}/instructor/sessions/${sessionId}`, {
+            method: 'PATCH',
+            headers: { 
+                ...getAuthHeaders(),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(sessionData)
+        });
+        return handleResponse(response);
+    },
+
+    async deleteSession(sessionId) {
+        const response = await fetch(`${BASE_URL}/instructor/sessions/${sessionId}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
+        });
+        return handleResponse(response);
+    },
+
     // Assignments (Both)
     async getInstructorSessionAssignments(sessionId) {
         const response = await fetch(`${BASE_URL}/instructor/sessions/${sessionId}/assignments`, { headers: getAuthHeaders() });
@@ -109,14 +129,42 @@ const api = {
         return handleResponse(response);
     },
 
-    async createAssignment(sessionId, assignmentData) {
+    async createAssignment(sessionId, payload) {
+        const headers = getAuthHeaders();
+        const isFormData = payload instanceof FormData;
+        
+        if (!isFormData) {
+            headers['Content-Type'] = 'application/json';
+        }
+
         const response = await fetch(`${BASE_URL}/instructor/sessions/${sessionId}/assignments`, {
             method: 'POST',
-            headers: { 
-                ...getAuthHeaders(),
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(assignmentData)
+            headers: headers,
+            body: isFormData ? payload : JSON.stringify(payload)
+        });
+        return handleResponse(response);
+    },
+
+    async updateAssignment(assignmentId, payload) {
+        const headers = getAuthHeaders();
+        const isFormData = payload instanceof FormData;
+        
+        if (!isFormData) {
+            headers['Content-Type'] = 'application/json';
+        }
+
+        const response = await fetch(`${BASE_URL}/instructor/assignments/${assignmentId}`, {
+            method: 'PATCH',
+            headers: headers,
+            body: isFormData ? payload : JSON.stringify(payload)
+        });
+        return handleResponse(response);
+    },
+
+    async deleteAssignment(assignmentId) {
+        const response = await fetch(`${BASE_URL}/instructor/assignments/${assignmentId}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
         });
         return handleResponse(response);
     },
@@ -169,6 +217,23 @@ const api = {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ score })
+        });
+        return handleResponse(response);
+    },
+
+    async deleteSubmission(submissionId) {
+        const response = await fetch(`${BASE_URL}/instructor/submissions/${submissionId}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
+        });
+        return handleResponse(response);
+    },
+
+    async forgotPassword(userId, email, newPassword) {
+        const response = await fetch(`${BASE_URL}/auth/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: userId, email, new_password: newPassword })
         });
         return handleResponse(response);
     }
