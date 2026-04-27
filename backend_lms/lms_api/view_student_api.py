@@ -17,7 +17,9 @@ class StudentClassListAPIView(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Class.objects.filter(enrolled_students__student__user=user)
+        return Class.objects.filter(
+            enrolled_students__student__user=user
+        ).select_related('course', 'instructor__user')
 
 class StudentSessionListAPIView(ListAPIView):
     serializer_class = StudentSessionSerializer
@@ -25,7 +27,7 @@ class StudentSessionListAPIView(ListAPIView):
 
     def get_queryset(self):
         cid = self.kwargs.get('class_id')
-        return Session.objects.filter(class_ref_id=cid)
+        return Session.objects.filter(class_ref_id=cid).prefetch_related('assignments')
 
 class StudentAssignmentListAPIView(ListAPIView):
     serializer_class = StudentAssignmentSerializer
@@ -48,7 +50,9 @@ class StudentSubmissionAPIView(APIView):
 
     def get(self, request, assignment_id):
         student = get_object_or_404(Student, user=request.user)
-        submissions = Submission.objects.filter(assignment_ref_id=assignment_id, student_ref=student)
+        submissions = Submission.objects.filter(
+            assignment_ref_id=assignment_id, student_ref=student
+        ).select_related('assignment_ref')
         serializer = StudentSubmissionSerializer(submissions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

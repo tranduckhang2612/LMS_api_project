@@ -16,14 +16,14 @@ class ForgotPasswordAPIView(APIView):
             
         user_to_reset = None
         
-        student = Student.objects.filter(student_id=user_id).first()
+        student = Student.objects.filter(student_id=user_id).select_related('user').first()
         if student:
             if student.user.email == email:
                 user_to_reset = student.user
             else:
                 return Response({'error': 'Email không khớp với ID sinh viên.'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            instructor = Instructor.objects.filter(instructor_id=user_id).first()
+            instructor = Instructor.objects.filter(instructor_id=user_id).select_related('user').first()
             if instructor:
                 if instructor.user.email == email:
                     user_to_reset = instructor.user

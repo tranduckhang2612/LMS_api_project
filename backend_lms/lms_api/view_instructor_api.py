@@ -26,7 +26,9 @@ class InstructorClassListByCourseAPIView(ListAPIView):
 
     def get_queryset(self):
         course_id = self.kwargs['id']
-        return Class.objects.filter(course__course_id=course_id, instructor__user=self.request.user)
+        return Class.objects.filter(
+            course__course_id=course_id, instructor__user=self.request.user
+        ).select_related('course', 'instructor__user')
 
 class InstructorClassStudentsAPIView(ListAPIView):
     serializer_class = StudentSerializer
@@ -34,7 +36,9 @@ class InstructorClassStudentsAPIView(ListAPIView):
 
     def get_queryset(self):
         class_id = self.kwargs.get('class_id')
-        return Student.objects.filter(enrollments__class_ref_id=class_id)
+        return Student.objects.filter(
+            enrollments__class_ref_id=class_id
+        ).select_related('user')
 
 class InstructorSessionListCreateAPIView(ListCreateAPIView):
     serializer_class = SessionSerializer
@@ -93,7 +97,9 @@ class InstructorSubmissionListAPIView(ListAPIView):
 
     def get_queryset(self):
         assignment_id = self.kwargs['assignment_id']
-        return Submission.objects.filter(assignment_ref_id=assignment_id, is_deleted=False)
+        return Submission.objects.filter(
+            assignment_ref_id=assignment_id, is_deleted=False
+        ).select_related('assignment_ref', 'student_ref__user')
 
 class InstructorSubmissionDeleteAPIView(DestroyAPIView):
     queryset = Submission.objects.filter(is_deleted=False)
