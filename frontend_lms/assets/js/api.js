@@ -69,6 +69,13 @@ const api = {
         return handleResponse(response);
     },
 
+    async getClassStudents(classId) {
+        const response = await fetch(`${BASE_URL}/instructor/classes/${classId}/students`, {
+            headers: getAuthHeaders()
+        });
+        return handleResponse(response);
+    },
+
     // Classes (Student)
     async getStudentClasses() {
         const response = await fetch(`${BASE_URL}/student/classes`, {

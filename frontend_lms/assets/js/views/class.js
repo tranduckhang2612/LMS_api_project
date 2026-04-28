@@ -42,6 +42,7 @@ async function loadSessions() {
             isInstructor = true;
             document.getElementById('btn-create-session').classList.remove('hidden');
             document.getElementById('btn-create-assignment').classList.remove('hidden');
+            document.getElementById('btn-view-students').classList.remove('hidden');
             
             // For instructor, fetch assignments for each session
             for(let s of allSessions) {
@@ -282,6 +283,7 @@ async function init() {
     await loadClassDetails();
     await loadSessions();
     setupInstructorForms();
+    setupStudentListButton();
 }
 
 function setupInstructorForms() {
@@ -433,6 +435,61 @@ function setupInstructorForms() {
             }
         };
     }
+}
+
+// --- GLOBAL FUNCTIONS FOR INSTRUCTOR ACTIONS ---
+
+async function renderStudentList() {
+    const dynamicContent = document.getElementById('dynamic-content');
+    dynamicContent.innerHTML = `<p class="text-muted">Loading students...</p>`;
+    try {
+        const students = await api.getClassStudents(classId);
+        if (students.length === 0) {
+            dynamicContent.innerHTML = `
+                <h2 class="mb-4">Class Students</h2>
+                <p class="text-muted">No students enrolled in this class.</p>`;
+            return;
+        }
+        let html = `
+            <h2 class="mb-4">Class Students <span class="badge badge-blue">${students.length}</span></h2>
+            <div class="card p-4">
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border);">
+                            <th style="padding: 10px 12px; text-align:left; font-size:0.85rem; color:var(--text-muted); text-transform:uppercase;">#</th>
+                            <th style="padding: 10px 12px; text-align:left; font-size:0.85rem; color:var(--text-muted); text-transform:uppercase;">Student ID</th>
+                            <th style="padding: 10px 12px; text-align:left; font-size:0.85rem; color:var(--text-muted); text-transform:uppercase;">Full Name</th>
+                            <th style="padding: 10px 12px; text-align:left; font-size:0.85rem; color:var(--text-muted); text-transform:uppercase;">Email</th>
+                            <th style="padding: 10px 12px; text-align:left; font-size:0.85rem; color:var(--text-muted); text-transform:uppercase;">Birthdate</th>
+                            <th style="padding: 10px 12px; text-align:left; font-size:0.85rem; color:var(--text-muted); text-transform:uppercase;">Admission Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+        students.forEach((s, i) => {
+            html += `
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 10px 12px; color:var(--text-muted);">${i + 1}</td>
+                    <td style="padding: 10px 12px; font-weight:600;">${s.student_id}</td>
+                    <td style="padding: 10px 12px;">${s.first_name} ${s.last_name}</td>
+                    <td style="padding: 10px 12px; color:var(--text-muted);">${s.email}</td>
+                    <td style="padding: 10px 12px; color:var(--text-muted);">${s.birthdate || '-'}</td>
+                    <td style="padding: 10px 12px; color:var(--text-muted);">${s.admission_year || '-'}</td>
+                </tr>`;
+        });
+        html += `</tbody></table></div>`;
+        dynamicContent.innerHTML = html;
+    } catch (err) {
+        dynamicContent.innerHTML = `<p class="text-red">Error loading students: ${err.message}</p>`;
+    }
+}
+
+function setupStudentListButton() {
+    const btn = document.getElementById('btn-view-students');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+        renderStudentList();
+    });
 }
 
 // --- GLOBAL FUNCTIONS FOR INSTRUCTOR ACTIONS ---

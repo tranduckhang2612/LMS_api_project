@@ -13,7 +13,6 @@ class IsInstructor(permissions.BasePermission):
 class CheckClassAccess(permissions.BasePermission):
     """
     Middleware/Permission kiểm tra quyền truy cập lớp học.
-    Thực hiện truy vấn ngược: assignment_id -> session_id -> class_id
     """
     message = "403 Forbidden: Bạn không có quyền truy cập lớp học này hoặc chưa đăng ký lớp."
 
