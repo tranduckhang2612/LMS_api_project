@@ -12,11 +12,11 @@ let isInstructor = false;
 let classData = null;
 let allSessions = [];
 
-// Helper to format Cloudinary URL
-function getDownloadUrl(url, filename) {
+// Helper: Thêm fl_attachment vào URL Cloudinary để force download
+// (Đã test: fl_attachment không tên hoạt động ổn định với raw files)
+function getDownloadUrl(url) {
     if (!url || !url.includes('/upload/')) return url;
-    const safeName = encodeURIComponent(filename || 'download');
-    return url.replace('/upload/', `/upload/fl_attachment:${safeName}/`);
+    return url.replace('/upload/', '/upload/fl_attachment/');
 }
 
 async function loadClassDetails() {
@@ -157,7 +157,7 @@ async function renderAssignmentContent(event, assignment) {
             ${assignment.deadline ? `<span class="badge badge-blue">Due: ${new Date(assignment.deadline).toLocaleString()}</span>` : ''}
         </div>
         ${assignment.description ? `<p class="mb-4 text-muted">${assignment.description}</p>` : ''}
-        ${assignment.assignment_url ? `<p class="mb-4"><a href="${getDownloadUrl(assignment.assignment_url, 'Assignment_File')}" target="_blank" class="font-bold underline text-primary">Download Attached File</a></p>` : ''}
+        ${assignment.assignment_url ? `<p class="mb-4"><a href="${getDownloadUrl(assignment.assignment_url, assignment.assignment_title || 'Assignment_File')}" target="_blank" class="font-bold underline text-primary">Download Attached File</a></p>` : ''}
         <div class="card p-4 mb-4" style="background: #fdfbf7; border: 1px solid #e0dcd3;">
             <p><strong>Assignment Details:</strong> Please submit your work before the deadline.</p>
         </div>

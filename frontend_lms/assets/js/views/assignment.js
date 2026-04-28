@@ -29,6 +29,7 @@ async function loadAssignment() {
                 ${due ? `<span class="badge badge-blue">Due: ${new Date(due).toLocaleString()}</span>` : ''}
             </div>
             ${desc ? `<p class="mt-2">${desc}</p>` : ''}
+            ${assignment.assignment_url ? `<p class="mt-3"><a href="${getDownloadUrl(assignment.assignment_url)}" target="_blank" class="font-bold underline text-primary">&#128196; Download Attached File</a></p>` : ''}
         `;
     } catch (error) {
         // ignore
@@ -38,11 +39,11 @@ async function loadAssignment() {
 // Detect Role
 let isInstructor = false; 
 
-// Helper to force Cloudinary to download the file with its original name
-function getDownloadUrl(url, filename) {
+// Helper: Thêm fl_attachment vào URL Cloudinary để force download
+// (Đã test: fl_attachment không tên hoạt động ổn định với raw files)
+function getDownloadUrl(url) {
     if (!url || !url.includes('/upload/')) return url;
-    const safeName = encodeURIComponent(filename || 'download');
-    return url.replace('/upload/', `/upload/fl_attachment:${safeName}/`);
+    return url.replace('/upload/', '/upload/fl_attachment/');
 }
 
 async function loadSubmissions() {

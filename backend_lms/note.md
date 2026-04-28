@@ -18,7 +18,7 @@ Instructor.objects.create(
 # 2. Tạo User cho Student 1:
 std_user = User.objects.create_user(
     username='sinhvien01',
-    password='newpassword123',
+    password='123456',
     role='student',
     first_name='Tran Duc',
     last_name='Khang',
