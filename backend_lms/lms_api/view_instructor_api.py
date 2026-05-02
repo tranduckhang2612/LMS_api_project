@@ -54,7 +54,7 @@ class InstructorSessionListCreateAPIView(ListCreateAPIView):
         serializer.save(class_ref=class_obj)
 
 class InstructorSessionDetailAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = Session.objects.all()
+    queryset = Session.objects.filter(is_deleted=False)
     serializer_class = SessionSerializer
     permission_classes = [IsAuthenticated, IsInstructorAndClassOwner]
     lookup_field = 'session_id' 
@@ -80,7 +80,7 @@ class InstructorAssignmentListCreateAPIView(ListCreateAPIView):
         serializer.save(session_ref=session_instance)
 
 class InstructorAssignmentDetailAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = Assignment.objects.all()
+    queryset = Assignment.objects.filter(is_deleted=False)
     serializer_class = AssignmentSerializer
     permission_classes = [IsAuthenticated, IsInstructorAndClassOwner]
     lookup_field = 'assignment_id'
@@ -115,7 +115,7 @@ class InstructorGradeSubmissionAPIView(APIView):
     permission_classes = [IsAuthenticated, IsInstructorAndClassOwner]
 
     def patch(self, request, submission_id):
-        submission = get_object_or_404(Submission, pk=submission_id)
+        submission = get_object_or_404(Submission, pk=submission_id, is_deleted=False)
         score = request.data.get('score')
 
         if score is None:

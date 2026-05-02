@@ -163,7 +163,7 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Trang Test API tự động cho hệ thống LMS',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    # Cấu hình Swagger tự nhận diện JWT Token
+    
     'SECURITY': [{'Bearer': []}],
     'SECURITY_DEFINITIONS': {
         'Bearer': {

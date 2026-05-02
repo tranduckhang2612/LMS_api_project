@@ -62,7 +62,7 @@ class CheckClassAccess(permissions.BasePermission):
         # Nếu URL là /api/sessions/{session_id}, cần truy vấn ngược để tìm class_id
         if not class_id and 'session_id' in view.kwargs:
             try:
-                session = Session.objects.select_related('class_ref').get(pk=view.kwargs['session_id'])
+                session = Session.objects.select_related('class_ref').get(pk=view.kwargs['session_id'], is_deleted=False)
                 class_id = session.class_ref.class_id
             except Session.DoesNotExist:
                 return False 
@@ -70,7 +70,7 @@ class CheckClassAccess(permissions.BasePermission):
         # Nếu URL là /api/assignments/{assignment_id}/submissions/
         if not class_id and 'assignment_id' in view.kwargs:
             try:
-                assignment = Assignment.objects.select_related('session_ref__class_ref').get(pk=view.kwargs['assignment_id'])
+                assignment = Assignment.objects.select_related('session_ref__class_ref').get(pk=view.kwargs['assignment_id'], is_deleted=False)
                 class_id = assignment.session_ref.class_ref.class_id
             except Assignment.DoesNotExist:
                 return False
@@ -116,7 +116,7 @@ class IsInstructorAndClassOwner(permissions.BasePermission):
         if session_id:
             try:
                 # Tìm xem bài giảng này thuộc lớp nào, và lớp đó do ai dạy
-                session = Session.objects.select_related('class_ref__instructor__user').get(pk=session_id)
+                session = Session.objects.select_related('class_ref__instructor__user').get(pk=session_id, is_deleted=False)
                 return session.class_ref.instructor.user == user
             except Session.DoesNotExist:
                 return False
@@ -126,7 +126,7 @@ class IsInstructorAndClassOwner(permissions.BasePermission):
         if assignment_id:
             try:
                 # Tìm bài tập -> Truy ngược ra Bài giảng -> Lớp học -> Giảng viên
-                assignment = Assignment.objects.select_related('session_ref__class_ref__instructor__user').get(pk=assignment_id)
+                assignment = Assignment.objects.select_related('session_ref__class_ref__instructor__user').get(pk=assignment_id, is_deleted=False)
                 return assignment.session_ref.class_ref.instructor.user == user
             except Assignment.DoesNotExist:
                 return False
@@ -135,7 +135,7 @@ class IsInstructorAndClassOwner(permissions.BasePermission):
         submission_id = view.kwargs.get('submission_id')
         if submission_id:
             try:
-                submission = Submission.objects.select_related('assignment_ref__session_ref__class_ref__instructor__user').get(pk=submission_id)
+                submission = Submission.objects.select_related('assignment_ref__session_ref__class_ref__instructor__user').get(pk=submission_id, is_deleted=False)
                 return submission.assignment_ref.session_ref.class_ref.instructor.user == user
             except Submission.DoesNotExist:
                 return False

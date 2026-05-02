@@ -7,7 +7,7 @@ from .models import User, Instructor, Student, Course, Class, Enrollment, Sessio
 class CustomUserAdmin(UserAdmin):
     # Kế thừa form mặc định và nhét thêm trường 'role', 'card_id' vào
     fieldsets = UserAdmin.fieldsets + (
-        ('Thông tin phân quyền LMS', {'fields': ('role', 'card_id')}),
+        ('Thông tin phân quyền LMS', {'fields': ('role',)}),
     )
 
 admin.site.register(User, CustomUserAdmin)

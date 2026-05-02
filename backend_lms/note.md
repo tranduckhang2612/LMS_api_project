@@ -48,3 +48,21 @@ Student.objects.create(
     birthdate=date(2005, 3, 20),
     admission_year=2024
 )
+
+# Tạo User cho Student 3:
+std_user_3 = User.objects.create_user(
+    username='sinhvien03',
+    password='password456',
+    role='student',
+    first_name='Le Minh',
+    last_name='Anh',
+    email='minhanh@lms.edu.vn'
+)
+
+# Profile Student 
+Student.objects.create(
+    student_id='STD003',
+    user=std_user_3,
+    birthdate=date(2005, 5, 20),
+    admission_year=2024
+)

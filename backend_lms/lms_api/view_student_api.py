@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.db.models import Prefetch
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -27,7 +28,9 @@ class StudentSessionListAPIView(ListAPIView):
 
     def get_queryset(self):
         cid = self.kwargs.get('class_id')
-        return Session.objects.filter(class_ref_id=cid).prefetch_related('assignments')
+        return Session.objects.filter(class_ref_id=cid, is_deleted=False).prefetch_related(
+            Prefetch('assignments', queryset=Assignment.objects.filter(is_deleted=False))
+        )
 
 class StudentAssignmentListAPIView(ListAPIView):
     serializer_class = StudentAssignmentSerializer
@@ -35,10 +38,10 @@ class StudentAssignmentListAPIView(ListAPIView):
 
     def get_queryset(self):
         session_id = self.kwargs.get('session_id')
-        return Assignment.objects.filter(session_ref_id=session_id)
+        return Assignment.objects.filter(session_ref_id=session_id, is_deleted=False)
 
 class StudentAssignmentDetailAPIView(RetrieveAPIView):
-    queryset = Assignment.objects.all()
+    queryset = Assignment.objects.filter(is_deleted=False)
     serializer_class = StudentAssignmentSerializer
     permission_classes = [IsAuthenticated, CheckClassAccess]
     lookup_field = 'assignment_id'
@@ -51,19 +54,19 @@ class StudentSubmissionAPIView(APIView):
     def get(self, request, assignment_id):
         student = get_object_or_404(Student, user=request.user)
         submissions = Submission.objects.filter(
-            assignment_ref_id=assignment_id, student_ref=student
+            assignment_ref_id=assignment_id, student_ref=student, is_deleted=False
         ).select_related('assignment_ref')
         serializer = StudentSubmissionSerializer(submissions, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, assignment_id):
-        assignment = get_object_or_404(Assignment, pk=assignment_id)
+        assignment = get_object_or_404(Assignment, pk=assignment_id, is_deleted=False)
         student = get_object_or_404(Student, user=request.user) 
 
         now = timezone.now()
         is_late = bool(assignment.deadline and now > assignment.deadline)
 
-        submission = Submission.objects.filter(assignment_ref=assignment, student_ref=student).first()
+        submission = Submission.objects.filter(assignment_ref=assignment, student_ref=student, is_deleted=False).first()
 
         if submission:
             if submission.submission_url:
